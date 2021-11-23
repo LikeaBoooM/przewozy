@@ -15,9 +15,12 @@ Including another URLconf
 """
 
 from django.urls import path, include
-from . views import Przewozy, PrzewozID
+from . views import Przewozy, PrzewozID, PrzewozyView, PrzewozyCreateView
 
 urlpatterns = [
-    path('przewozy/', Przewozy.as_view(), name='przewozy'),
-    path('przewozy/<int:id>/', PrzewozID.as_view(), name='przewozy-id'),
+    path('api/przewozy/', Przewozy.as_view(), name='przewozy'),
+    path('api/przewozy/<int:id>/', PrzewozID.as_view(), name='przewozy-id'),
+    path('view/przewozy/', PrzewozyView.as_view(), name='przewozy-view'),
+    path('view/przewozy/create/', PrzewozyCreateView.as_view(), name='przewozy-view-create'),
+
 ]

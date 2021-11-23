@@ -1,11 +1,27 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import request, HttpResponse
+from django.views.generic import ListView, CreateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . serializers import PrzewozSerializer
 from . models import Przewoz
+from . forms import PrzewozForm
 # Create your views here.
+
+
+class PrzewozyCreateView(CreateView):
+    form_class = PrzewozForm
+    template_name = 'API/przewoz_create.html'
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+
+class PrzewozyView(ListView):
+    model = Przewoz
+    template_name = 'API/przewoz_list.html'
 
 
 class PrzewozID(APIView):
