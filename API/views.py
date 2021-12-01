@@ -52,7 +52,7 @@ class CardCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('card-update')
+        return reverse('karty-update')
 
 
 class CardDeleteView(DeleteView):
@@ -182,3 +182,17 @@ class Przewozy(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+
+class ResetPaliwo(APIView):
+
+    def get(self, request, pk):
+        karta = Karta.objects.get(id_card=pk)
+        karta.fuel = 0
+        karta.save()
+        serializer = KartaSerializer(karta)
+
+        if serializer:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
