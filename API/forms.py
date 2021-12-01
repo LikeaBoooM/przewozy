@@ -30,7 +30,7 @@ class PrzewozForm(forms.ModelForm):
 
 class KartaForm(forms.ModelForm):
     class Meta:
-        model: Karta
+        model = Karta
         fields = '__all__'
 
 

@@ -14,6 +14,7 @@ class Przewoz(models.Model):
     def __str__(self):
         return self.plate_number
 
+
 class Karta(models.Model):
     id_card = models.CharField(max_length=100)
     registration = models.CharField(max_length=100)

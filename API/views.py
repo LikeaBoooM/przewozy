@@ -28,7 +28,7 @@ def manageprzewozy(request):
 def managekarty(request):
     cards = Karta.objects.all()
     KartyFormSet = modelformset_factory(Karta, form=KartaForm)
-    template_name = 'API/karty_update.html'
+    template_name = 'API/card_update.html'
     if request.method == 'POST':
         formset = KartyFormSet(request.POST)
         if formset.is_valid():
@@ -40,6 +40,25 @@ def managekarty(request):
         formset = KartyFormSet()
     context = {'formset': formset}
     return render(request, template_name, context)
+
+
+class CardCreateView(CreateView):
+    model = Karta
+    form_class = KartaForm
+    template_name = 'API/card_create.html'
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('card-update')
+
+
+class CardDeleteView(DeleteView):
+    model = Karta
+    template_name = 'API/card_delete.html'
+    success_url = '/view/karty/update/'
 
 
 class DeletePrzewoz(DeleteView):
@@ -73,6 +92,7 @@ class KartyID(APIView):
 
 
 class Karty(APIView):
+
     def get(self, request):
         cards = Karta.objects.all()
         serializer = KartaSerializer(cards, many=True)
