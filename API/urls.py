@@ -17,14 +17,18 @@ Including another URLconf
 from django.urls import path, include
 
 import API.views
-from . views import Przewozy, PrzewozID, PrzewozyView, PrzewozyCreateView, PrzewozyDetailView
+from . views import Przewozy, PrzewozID, PrzewozyView, PrzewozyCreateView, PrzewozyDetailView, KartyID, Karty, PrzewozyUpdateView, DeletePrzewoz
 
 urlpatterns = [
     path('api/przewozy/', Przewozy.as_view(), name='przewozy'),
     path('api/przewozy/<int:id>/', PrzewozID.as_view(), name='przewozy-id'),
+    path('api/karty/', Karty.as_view(), name='karty'),
+    path('api/karty/<int:id>/', KartyID.as_view(), name='karty-id'),
+    path('view/karty/update/', API.views.managekarty, name='karty-update'),
     path('view/przewozy/', PrzewozyView.as_view(), name='przewozy-view'),
-    path('view/przewozy/update', API.views.przewozyUpdate, name='przewozy-view'),
+    path('view/przewozy/<int:pk>/', PrzewozyUpdateView.as_view(), name='przewozy-view'),
     path('view/przewozy/create/', PrzewozyCreateView.as_view(), name='przewozy-view-create'),
+    path('view/przewozy/delete/<int:pk>', DeletePrzewoz.as_view(), name='przewozy-view-delete'),
     path('view/przewozy/detail/<int:pk>/', PrzewozyDetailView.as_view(), name='przewozy-view-detail'),
 
 ]

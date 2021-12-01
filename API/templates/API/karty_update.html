@@ -1,0 +1,84 @@
+{% extends 'API/base.html' %}
+{% load crispy_forms_tags%}
+
+{% load %}
+{% block content2 %}
+<div class="container mt-5">
+    <div class="mb-2 text-end">
+        <a class="btn btn-primary" href="./add-card.php">
+            <i class="fas fa-plus"></i>
+            Dodaj kartę
+        </a>
+    </div>
+    <table class="table table-light table-striped table-hover">
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tr>
+            <form method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ formset.management_form }}
+
+                {% for form in formset %}
+
+                <td>{{form}}</td>
+                <td>
+                    <button type="submit" class="btn btn-success" value="Save">
+                        <i class="fas fa-check"></i>
+                        Zapisz
+                    </button>
+                </td>
+                 {% endfor %}
+            </form>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-2 text-end">
+{{ formset.non_form_errors.as_ul }}
+<table id="formset" class="form table table-light table-striped table-hover">
+    <form method='POST' enctype="multipart/form-data">{% csrf_token %}
+{{ formset.management_form }}
+{% for form in formset.forms %}
+  {% if forloop.first %}
+  {% endif %}
+  <tr>
+  {% for field in form.visible_fields %}
+    <td>
+    {# Include the hidden fields in the form #}
+    {% if forloop.first %}
+      {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+      {% endfor %}
+    {% endif %}
+      {{ field.errors.as_ul }}
+      {{ field | as_crispy_field }}
+    </td>
+  {% endfor %}
+  <td>
+  <button type="submit" class="btn btn-success mt-4" value="Save">
+  <i class="fas fa-check"></i>
+  Zapisz
+  </button>
+  </td>
+  </tr>
+{% endfor %}
+    </form>
+</table>
+    </div>
+</div>
+{% endblock %}
