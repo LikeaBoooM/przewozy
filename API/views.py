@@ -5,14 +5,10 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import PrzewozSerializer, KartaSerializer, CarsCreateSerializer, RatesCreateSerializer
-from .models import Przewoz, Karta, Car, Rate
-from .forms import PrzewozForm, KartaForm
+from . serializers import PrzewozSerializer, KartaSerializer
+from . models import Przewoz, Karta
+from . forms import PrzewozForm, KartaForm
 from django.forms import inlineformset_factory, modelformset_factory
-from django.contrib import messages
-from .CarApiOut import checkModel
-from django.db.models import Avg, Count
-
 # Create your views here.
 
 def manageprzewozy(request):
@@ -161,7 +157,7 @@ class PrzewozID(APIView):
             return Response(serializerPrzewoz.data, status=status.HTTP_200_OK)
         return Response(serializerPrzewoz.errors, status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, id):
+    def delete(self, request, id=None):
         przewozs = get_object_or_404(Przewoz, pk=id)
         przewozs.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -174,9 +170,10 @@ class Przewozy(APIView):
         przewozy = Przewoz.objects.all()
         serializer = PrzewozSerializer(przewozy, many=True)
 
-        if serializer:
+        if serializer :
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
 
     def post(self, request):
 
@@ -188,6 +185,7 @@ class Przewozy(APIView):
 
 
 class ResetPaliwo(APIView):
+
     def get(self, request, pk):
         karta = Karta.objects.get(id_card=pk)
         karta.fuel = 0
@@ -197,77 +195,4 @@ class ResetPaliwo(APIView):
         if serializer:
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CarsNG(APIView):
-    def post(self, request):
-        make = request.data['make']
-        model = request.data['model']
-
-        check = checkModel(make, model)
-
-        if check is 1 :
-            serializer = CarsCreateSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response("This model doesn't exist for that make ! ")
-
-    def get(self, request):
-        cars = Car.objects.all()
-        serializer = CarsCreateSerializer(cars, many=True)
-
-        if serializer:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-
-    def delete(self, request):
-        cars = Car.objects.all()
-        cars.delete()
-
-
-class DeleteCar(APIView):
-    def delete(self, request, id):
-        if id:
-            car = get_object_or_404(Car, pk=id)
-            car.delete()
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-class RateCar(APIView):
-    def post(self, request):
-        serializer = RatesCreateSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def get(self, request):
-        rates = Rate.objects.all()
-        serializer = RatesCreateSerializer(rates, many=True)
-
-        if serializer:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_204_NO_CONTENT)
-
-    def delete(self, request):
-        rates = Rate.objects.all()
-        rates.delete()
-
-
-class Popular(APIView):
-    def get(self, request):
-        number_of_rates = Car.objects.annotate(rates_number=Count('rate')).values().order_by('-id')
-        return Response(number_of_rates, status=status.HTTP_200_OK)
-
-
-class AvgRates(APIView):
-    def get(self, request):
-        caravg = Car.objects.annotate(avg_rating=Avg('rate__grade')).values().order_by('-id')
-        if caravg:
-            return Response(caravg, status=status.HTTP_200_OK)
-        return Response("No data here.", status=status.HTTP_204_NO_CONTENT)
 

@@ -14,11 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path
-
+from django.urls import path, include
+from django.urls import re_path
 import API.views
-from .views import Przewozy, PrzewozID, PrzewozyView, PrzewozyCreateView, PrzewozyDetailView, KartyID, Karty, \
-    PrzewozyUpdateView, DeletePrzewoz, CardCreateView, CardDeleteView, ResetPaliwo, CarsNG, DeleteCar, RateCar, Popular, AvgRates
+from . views import Przewozy, PrzewozID, PrzewozyView, PrzewozyCreateView, PrzewozyDetailView, KartyID, Karty, \
+    PrzewozyUpdateView, DeletePrzewoz, CardCreateView, CardDeleteView, ResetPaliwo
 
 urlpatterns = [
     path('api/przewozy/', Przewozy.as_view(), name='przewozy'),
@@ -34,11 +34,5 @@ urlpatterns = [
     path('view/karty/update/', API.views.managekarty, name='karty-update'),
     path('view/karty/create/', CardCreateView.as_view(), name='karty-create'),
     path('view/karty/delete/<int:pk>', CardDeleteView.as_view(), name='karty-delete'),
-    path('ng/cars/', CarsNG.as_view(), name='cars-ng'),
-    path('ng/cars/<int:id>/', DeleteCar.as_view(), name='cars-ng-delete'),
-    path('ng/rates/', RateCar.as_view(), name='cars-ng-rate-car'),
-    path('ng/popular/', Popular.as_view(), name='cars-ng-popular'),
-    path('ng/carsavg/', AvgRates.as_view(), name='cars-ng-avg-rates'),
-
 
 ]
