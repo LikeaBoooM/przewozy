@@ -7,9 +7,9 @@ API with ESP32 code : https://github.com/LikeaBoooM/RobsonESP32/blob/main/waga_r
 
 ## Result as a web application 
 
-# VIEW CARRIAGES
+# VIEW CARRIAGES from official web https://przewozy.vxm.pl/
 ![image](https://user-images.githubusercontent.com/37511105/145915657-f551f8cc-fd05-4524-82a7-7adc30dcc359.png)
 
 
-# VIEW CARDS
+# VIEW CARDS from official web https://przewozy.vxm.pl/
 ![image](https://user-images.githubusercontent.com/37511105/145915745-184f65b1-a35e-4520-96c0-843d87113351.png)
